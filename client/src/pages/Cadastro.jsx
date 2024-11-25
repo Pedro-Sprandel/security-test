@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import fetchWithCSRF from '../csurf';
+import DOMPurify from 'dompurify';
 
 function Cadastro() {
   const navigate = useNavigate();
@@ -9,12 +10,14 @@ function Cadastro() {
     e.preventDefault();
 
     const formData = new FormData(e.target);
+
+    // Sanitize input data before sending it to the server
     const data = {
-      nome: formData.get("nome"),
-      telefone: formData.get("telefone") || null,
-      email: formData.get("email"),
-      website: formData.get("website") || null,
-      experiencia: formData.get("experiencia"),
+      nome: DOMPurify.sanitize(formData.get("nome")),
+      telefone: formData.get("telefone") ? DOMPurify.sanitize(formData.get("telefone")) : null,
+      email: DOMPurify.sanitize(formData.get("email")),
+      website: formData.get("website") ? DOMPurify.sanitize(formData.get("website")) : null,
+      experiencia: DOMPurify.sanitize(formData.get("experiencia")),
     };
 
     try {
